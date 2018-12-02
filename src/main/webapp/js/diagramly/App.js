@@ -187,6 +187,11 @@ App.TRELLO_JQUERY_URL = 'https://code.jquery.com/jquery-1.7.1.min.js';
 App.FOOTER_PLUGIN_URL = 'https://www.jgraph.com/drawio-footer.js';
 
 /**
+ * Specifies the ID for the pusher project.
+ */
+App.PUSHER_ID = 'fd30ee6d04a388192212';
+
+/**
  * Switch to disable Google realtime starting on 11/12/2018 at 9:00am (UTC).
  */
 App.GOOGLE_REALTIME = urlParams['google-realtime'] != '0' && new Date().getTime() < 1542013200000;
@@ -207,7 +212,7 @@ App.pluginRegistry = {'4xAKTrabTpTzahoLthkwPNUn': '/plugins/explore.js',
 	'ac': '/plugins/connect.js', 'acj': '/plugins/connectJira.js',
 	'ac148': '/plugins/cConf-1-4-8.js', 'voice': '/plugins/voice.js',
 	'tips': '/plugins/tooltips.js', 'svgdata': '/plugins/svgdata.js',
-	'doors': '/plugins/doors.js', 'electron': 'plugins/electron.js',
+	'electron': 'plugins/electron.js',
 	'number': '/plugins/number.js', 'sql': '/plugins/sql.js',
 	'props': '/plugins/props.js', 'text': '/plugins/text.js',
 	'anim': '/plugins/animation.js', 'update': '/plugins/update.js',
@@ -1151,6 +1156,25 @@ App.prototype.isDriveDomain = function()
 App.prototype.isLegacyDriveDomain = function()
 {
 	return urlParams['drive'] == 0 || window.location.hostname == 'legacy.draw.io';
+};
+
+/**
+ * Returns the pusher instance for notifications. Creates the instance of none exists.
+ */
+App.prototype.getPusher = function()
+{
+	if (this.pusher == null && typeof window.Pusher === 'function')
+	{
+		//Pusher.logToConsole = true;
+		
+		this.pusher = new Pusher(App.PUSHER_ID,
+		{
+			encrypted: true,
+			cluster: 'eu'
+		});
+	}
+	
+	return this.pusher;
 };
 
 /**
